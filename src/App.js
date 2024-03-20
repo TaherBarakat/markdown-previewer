@@ -2,19 +2,14 @@ import "./App.css";
 import React, { useState } from "react";
 import useLocalStorage from "./useLocalStorage";
 import { marked } from "marked";
+import Doc from "./Doc";
 const App = () => {
      const [code, setCode] = useLocalStorage("CODE");
      const [compiled, setCompiled] = useLocalStorage("COMPILED");
-     const [hide, hidePreview] = useState(true);
+     const [isOpen, setIsOpen] = useState("md");
 
-     const openMD = () => {
-          console.log(0);
-          hidePreview(true);
-     };
-
-     const openPreview = () => {
-          console.log(0);
-          hidePreview(false);
+     const openWindow = (window) => {
+          setIsOpen(window);
      };
 
      const handleChange = (e) => {
@@ -27,19 +22,35 @@ const App = () => {
                <h1>MarkDown Previewer React App</h1>
                <div className="container">
                     <div className="btns">
-                         <button onClick={openMD} className="btn">
+                         <button
+                              onClick={() => openWindow("md")}
+                              className={isOpen === "md" ? "btn" : ""}
+                         >
                               MarkDown
                          </button>
-                         <button onClick={openPreview}>Preview</button>
+                         <button
+                              className={isOpen === "Preview" ? "btn" : ""}
+                              onClick={() => openWindow("Preview")}
+                         >
+                              Preview
+                         </button>
+                         <button
+                              className={isOpen === "doc" ? "btn" : ""}
+                              onClick={() => openWindow("doc")}
+                         >
+                              Doc
+                         </button>
                     </div>
-                    {hide ? (
+                    {isOpen === "md" ? (
                          <div>
                               <textarea onChange={handleChange} value={code} />
                          </div>
-                    ) : (
+                    ) : isOpen === "Preview" ? (
                          <div>
                               <textarea value={compiled} />
                          </div>
+                    ) : (
+                         <Doc />
                     )}
                </div>
           </>
